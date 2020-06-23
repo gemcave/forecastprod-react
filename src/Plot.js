@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 export const Plot = (props) => {
   useEffect(() => {
     drawPlot();
+    document.getElementById("plot").on("plotly_click", props.onPlotClick);
   }, [props.type, props.xData, props.yData]);
 
   const drawPlot = () => {

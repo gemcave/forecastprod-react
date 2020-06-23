@@ -9,6 +9,10 @@ export const App = () => {
     data: {},
     dates: [],
     temps: [],
+    selected: {
+      date: "",
+      temp: null,
+    },
   });
   const [currentTemp, setCurrentTemp] = useState("Specify a location");
 
@@ -41,9 +45,13 @@ export const App = () => {
 
         setState((state) => ({
           ...state,
+          data,
           dates: dates,
           temps: temps,
-          data,
+          selected: {
+            date: "",
+            temp: null,
+          },
         }));
       })
       .catch((e) => console.log(`error ${e}`));
@@ -53,6 +61,18 @@ export const App = () => {
     setState({
       location: evt.target.value,
     });
+  };
+
+  const onPlotClick = (data) => {
+    if (data.points) {
+      setState((state) => ({
+        ...state,
+        selected: {
+          date: data.points[0].x,
+          temp: data.points[0].y,
+        },
+      }));
+    }
   };
 
   return (
@@ -73,7 +93,26 @@ export const App = () => {
         <span className="temp">{currentTemp}</span>
         <span className="temp-symbol">°C</span>
       </p>
-      <Plot xData={state.dates} yData={state.temps} type="scatter" />
+      {state.data && state.data.list ? (
+        <div className="wrapper">
+          <p className="temp-wrapper">
+            <span className="temp">
+              {state.selected.temp ? state.selected.temp : currentTemp}
+            </span>
+            <span className="temp-symbol">°C</span>
+            <span className="temp-date">
+              {state.selected.temp ? state.selected.date : ""}
+            </span>
+          </p>
+          <h2>Forecast</h2>
+          <Plot
+            xData={state.dates}
+            yData={state.temps}
+            type="scatter"
+            onPlotClick={onPlotClick}
+          />
+        </div>
+      ) : null}
     </div>
   );
 };
