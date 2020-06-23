@@ -1,26 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export const App = () => {
+  const [state, setState] = useState({
+      location: ''
+  });
+  
+  const fetchData = (evt) => {
+    evt.preventDefault();
+    console.log('fetch data for', this.state.location);
+  };
 
-export default App;
+  const changeLocation = (evt) => {
+    setState({
+      location: evt.target.value
+    });
+  };
+
+    return (
+      <div>
+        <h1>Weather</h1>
+        <form onSubmit={fetchData}>
+          <label>I want to know the weather for
+            <input
+              placeholder={"City, Country"}
+              type="text"
+              value={state.location}
+              onChange={changeLocation}
+            />
+          </label>
+        </form>
+      </div>
+    );
+}
