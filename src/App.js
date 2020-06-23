@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { API_KEY } from "./apiKey";
 import "./App.css";
+import { Plot } from "./Plot";
 
 export const App = () => {
   const [state, setState] = useState({
     location: "",
-    data: null,
+    data: {},
+    dates: [],
+    temps: [],
   });
   const [currentTemp, setCurrentTemp] = useState("Specify a location");
 
@@ -26,12 +29,23 @@ export const App = () => {
 
     fetch(url)
       .then((r) => r.json())
-      .then((data) =>
+      .then((data) => {
+        var list = data.list;
+        var dates = [];
+        var temps = [];
+
+        for (var i = 0; i < list.length; i++) {
+          dates.push(list[i].dt_txt);
+          temps.push(list[i].main.temp);
+        }
+
         setState((state) => ({
           ...state,
+          dates: dates,
+          temps: temps,
           data,
-        }))
-      )
+        }));
+      })
       .catch((e) => console.log(`error ${e}`));
   };
 
@@ -59,6 +73,7 @@ export const App = () => {
         <span className="temp">{currentTemp}</span>
         <span className="temp-symbol">°C</span>
       </p>
+      <Plot xData={state.dates} yData={state.temps} type="scatter" />
     </div>
   );
 };
